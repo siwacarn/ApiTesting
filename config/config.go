@@ -4,24 +4,24 @@ type Config struct {
 	DB *DBConfig
 }
 
-type DBConfig struct {
-	Dialect  string
+type DBConfig struct{
+	Dialect string
 	Username string
 	Password string
 	Hostname string
-	Name     string
-	Charset  string
+	Name string
+	Charset string
 }
 
-func GetConfig() *Config {
+func GetConfig() *Config{
 	return &Config{
 		DB: &DBConfig{
-			Dialect:  "mysql",
+			Dialect: "mysql",
 			Username: "root",
 			Password: "root",
 			Hostname: "localhost:3306",
-			Name:     "employee",
-			Charset:  "utf8",
-		},
+			Name: "farm",
+			Charset: "utf8",
+		}
 	}
 }

@@ -10,14 +10,6 @@
   version = "v1.4.1"
 
 [[projects]]
-  digest = "1:cbec35fe4d5a4fba369a656a8cd65e244ea2c743007d8f6c1ccb132acf9d1296"
-  name = "github.com/gorilla/mux"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "00bdffe0f3c77e27d2cf6f5c70232a2d3e4d9c15"
-  version = "v1.7.3"
-
-[[projects]]
   digest = "1:bf3bd8cc2f7357b8ab72f697bd05f308f7252094195c86872ba1505a644cdb59"
   name = "github.com/jinzhu/gorm"
   packages = [
@@ -48,7 +40,6 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/gorilla/mux",
     "github.com/jinzhu/gorm",
     "github.com/jinzhu/gorm/dialects/mysql",
   ]

@@ -5,24 +5,20 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-type Employee struct {
+type User struct {
 	gorm.Model
-	Name   string `gorm:"unique" json:"name"`
-	City   string `json:"city"`
-	Age    int    `json:"age"`
-	Status bool   `json:"status"`
+	Username string `gorm:"unique" json:"name"`
+	Passwoed string `json:"password"`
 }
 
-func (e *Employee) Disable() {
-	e.Status = false
+type Indicator struct {
+	gorm.Model
+	Light       int     `json:"light"`
+	Temperature float64 `json:"temperature"`
+	Humidity    float64 `json:"humidity"`
 }
 
-func (p *Employee) Enable() {
-	p.Status = true
-}
-
-// DBMigrate will create and migrate the tables, and then make the some relationships if necessary
-func DBMigrate(db *gorm.DB) *gorm.DB {
-	db.AutoMigrate(&Employee{})
+func DBMigrate(db *gorm) *gorm.DB {
+	db.AutoMigrate(&Indicator{})
 	return db
 }
