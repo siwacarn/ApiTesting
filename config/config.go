@@ -20,7 +20,7 @@ func GetConfig() *Config {
 			Username: "root",
 			Password: "root",
 			Hostname: "localhost:3306",
-			Name:     "employee",
+			Name:     "farm",
 			Charset:  "utf8",
 		},
 	}
