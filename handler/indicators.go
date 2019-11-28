@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 )
 
@@ -15,61 +14,25 @@ func GetAllIndicators(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusOK, indicators)
 }
 
-func GetTemperature(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
+func CreateIndicators(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
+	respondIndicator := model.Indicator{}
 
-	temp := vars["temperature"]
-	respondJSON(w, http.StatusOK, temp)
-}
-func UpdateTemperature(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
+	jsonDecoder := json.NewDecoder(r.Body)
+	if err := jsonDecoder.Decode(&respondIndicator); err != nil {
+		respondError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	defer r.Body.Close()
 
-	temp := vars["temperature"]
-
-	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&temp); err != nil {
+	if err := db.Save(&respondIndicator).Error; err != nil {
 		respondError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	respondJSON(w, http.StatusOK, temp)
+
+	// sucessful return output
+	respondJSON(w, http.StatusCreated, respondIndicator)
 }
 
-func GetLight(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
+func GetLightValueByDate(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 
-	light := vars["lightintensity"]
-	respondJSON(w, http.StatusOK, light)
-}
-
-func UpdateLight(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-
-	light := vars["lightintensity"]
-
-	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&light); err != nil {
-		respondError(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-	respondJSON(w, http.StatusOK, light)
-}
-
-func GetHumidity(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-
-	humid := vars["humidity"]
-	respondJSON(w, http.StatusOK, humid)
-}
-
-func UpdateHumidity(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-
-	humid := vars["humidity"]
-
-	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&humid); err != nil {
-		respondError(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-	respondJSON(w, http.StatusOK, humid)
 }
