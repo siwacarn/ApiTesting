@@ -45,18 +45,20 @@ func (a *App) setRouters() {
 	//user
 	a.Get("/users", a.GetAllUser)
 	a.Post("/user", a.CreateUser)
-	a.Get("/user/{name}", a.GetUser)
-	a.Put("/user/{name}", a.UpdateUser)
-	a.Delete("/user/{name}", a.DeleteUser)
+	a.Get("/user/{username}", a.GetUser)
+	a.Put("/user/{username}", a.UpdateUser)
+	a.Delete("/user/{username}", a.DeleteUser)
 	//indicators
 	a.Get("/user/indicator", a.GetAllIndicators)
 	a.Post("/user/indicator", a.CreateIndicators)
 
-	a.Get("/user/indicator/{parameter}/latest", a.GetLightValueNow)
+	// a.Get("/user/indicator/{parameter}/latest", a.GetLightValueNow)
+	// a.Get("/user/indicator/{parameter}/latest", a.GetTempValueNow)
+	// a.Get("/user/indicator/{parameter}/latest", a.GetHumidValueNow)
 
 	a.Get("/user/indicator/light/{date}", a.GetLightValueByDate)
-	a.Get("/user/indicator/temp/{date}", a.GetTempValueByDate)
-	a.Get("/user/indicator/humid/{date}", a.GetHumidValueByDate)
+	// a.Get("/user/indicator/temp/{date}", a.GetTempValueByDate)
+	// a.Get("/user/indicator/humid/{date}", a.GetHumidValueByDate)
 }
 
 //Wrap the router for GET method
@@ -109,8 +111,8 @@ func (a *App) CreateIndicators(w http.ResponseWriter, r *http.Request) {
 	handler.CreateIndicators(a.DB, w, r)
 }
 
-func (a *App) UpdateIndicators(w http.ResponseWriter, r *http.Request) {
-	handler.UpdateIndicators(a.DB, w, r)
+func (a *App) GetLightValueByDate(w http.ResponseWriter, r *http.Request) {
+	handler.GetLightValueByDate(a.DB, w, r)
 }
 
 // func (a *App) GetTemperature(w http.ResponseWriter, r *http.Request) {

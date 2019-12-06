@@ -7,8 +7,11 @@ import (
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"unique" json:"name"`
-	Passwoed string `json:"password"`
+	Username string `gorm:"unique" json:"username"`
+	Password string `json: "password"`
+	Email    string `json: "email"`
+	City     string `json: "city"`
+	Age      int16  `json: "age"`
 	// TODO: need more data
 }
 

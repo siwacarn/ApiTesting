@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 )
 
@@ -34,5 +35,15 @@ func CreateIndicators(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 }
 
 func GetLightValueByDate(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
 
+	Light := vars["light"]
+	jsonDecoder := json.NewDecoder(r.Body)
+	if err := jsonDecoder.Decode(&Light); err != nil {
+		respondError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	// sucessful return output
+	respondJSON(w, http.StatusOK, Light)
 }

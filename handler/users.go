@@ -3,6 +3,7 @@ package handler
 import (
 	"api/model"
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -35,8 +36,8 @@ func CreateUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 func GetUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
-	name := vars["name"]
-	user := getUserOr404(db, name, w, r)
+	username := vars["username"]
+	user := getUserOr404(db, username, w, r)
 	if user == nil {
 		return
 	}
@@ -46,34 +47,52 @@ func GetUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 func UpdateUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
-	name := vars["name"]
-	user := getUserOr404(db, name, w, r)
-	if user == nil {
-		return
-	}
-
-	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&user); err != nil {
-		respondError(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-	respondJSON(w, http.StatusOK, user)
+	username := vars["username"]
+	// update method
+	log.Println("username to update: " + username)
+	updater := updateUserInformation(db, username, w, r)
+	respondJSON(w, http.StatusOK, updater)
 }
 
 func DeleteUser(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
-	name := vars["name"]
-	user := getUserOr404(db, name, w, r)
-	if user == nil {
-		return
-	}
-	respondJSON(w, http.StatusNoContent, nil)
+	username := vars["username"]
+	// delete method
+	log.Println("username to delete:" + username)
+	deleter := DeleteUserInfomation(db, username, w, r)
+	respondJSON(w, http.StatusNoContent, deleter)
 }
 
-func getUserOr404(db *gorm.DB, name string, w http.ResponseWriter, r *http.Request) *model.User {
+func getUserOr404(db *gorm.DB, username string, w http.ResponseWriter, r *http.Request) *model.User {
 	user := model.User{}
-	if err := db.First(&user, model.User{Username: name}).Error; err != nil {
+	if err := db.First(&user, model.User{Username: username}).Error; err != nil {
+		respondError(w, http.StatusNotFound, err.Error())
+		return nil
+	}
+	return &user
+}
+
+func updateUserInformation(db *gorm.DB, username string, w http.ResponseWriter, r *http.Request) *model.User {
+	user := model.User{}
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		respondError(w, http.StatusBadRequest, err.Error())
+	}
+	if err := db.Model(&user).Where("username = ?", username).Update(user).Error; err != nil {
+		respondError(w, http.StatusNotFound, err.Error())
+		return nil
+	}
+	return &user
+}
+
+func DeleteUserInfomation(db *gorm.DB, username string, w http.ResponseWriter, r *http.Request) *model.User {
+	user := model.User{}
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		respondError(w, http.StatusBadRequest, err.Error())
+	}
+	if err := db.Model(&user).Where("username = ?", username).Delete(user).Error; err != nil {
 		respondError(w, http.StatusNotFound, err.Error())
 		return nil
 	}
