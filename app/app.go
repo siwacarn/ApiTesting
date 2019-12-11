@@ -52,13 +52,13 @@ func (a *App) setRouters() {
 	a.Get("/user/indicator", a.GetAllIndicators)
 	a.Post("/user/indicator", a.CreateIndicators)
 
-	// a.Get("/user/indicator/{parameter}/latest", a.GetLightValueNow)
+	// a.Get("/user/indicator/lightnow/latest", a.GetLightValueNow)
 	// a.Get("/user/indicator/{parameter}/latest", a.GetTempValueNow)
 	// a.Get("/user/indicator/{parameter}/latest", a.GetHumidValueNow)
 
 	a.Get("/user/indicator/light/{date}", a.GetLightValueByDate)
-	// a.Get("/user/indicator/temp/{date}", a.GetTempValueByDate)
-	// a.Get("/user/indicator/humid/{date}", a.GetHumidValueByDate)
+	a.Get("/user/indicator/temp/{date}", a.GetTempValueByDate)
+	a.Get("/user/indicator/humid/{date}", a.GetHumidValueByDate)
 }
 
 //Wrap the router for GET method
@@ -113,6 +113,14 @@ func (a *App) CreateIndicators(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) GetLightValueByDate(w http.ResponseWriter, r *http.Request) {
 	handler.GetLightValueByDate(a.DB, w, r)
+}
+
+func (a *App) GetTempValueByDate(w http.ResponseWriter, r *http.Request) {
+	handler.GetTempValueByDate(a.DB, w, r)
+}
+
+func (a *App) GetHumidValueByDate(w http.ResponseWriter, r *http.Request) {
+	handler.GetHumidValueByDate(a.DB, w, r)
 }
 
 // func (a *App) GetTemperature(w http.ResponseWriter, r *http.Request) {
